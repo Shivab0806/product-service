@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: product-service-db
+    environment:
+      POSTGRES_DB: product_service_db
+      POSTGRES_USER: product_service
+      POSTGRES_PASSWORD: product_service
+    ports:
+      - "5432:5432"
+    volumes:
+      - product_service_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U product_service -d product_service_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  product-service:
+    build: .
+    container_name: product-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/product_service_db
+      DB_USERNAME: product_service
+      DB_PASSWORD: product_service
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  product_service_pgdata:

@@ -36,7 +36,7 @@ spring:
       write-dates-as-timestamps: false
 
 server:
-  port: 8080
+  port: 8081
   error:
     include-message: never
     include-stacktrace: never
@@ -69,6 +69,8 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
+jwt:
+  secret: zr4K7SV93VSpBfMgCiTLJ2BuYevwadH5ykZktMpfosh
 
 ---
 spring:
@@ -96,3 +98,5 @@ spring:
       ddl-auto: create-drop
   liquibase:
     enabled: false
+
+

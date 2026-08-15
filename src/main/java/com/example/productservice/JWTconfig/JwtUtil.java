@@ -49,4 +49,12 @@ public class JwtUtil {
     private Claims getClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
+
+    public java.util.Set<String> extractAuthorities(String token) {
+        Claims claims = getClaims(token);
+        String permissions = claims.get("permissions", String.class);
+        if (permissions == null || permissions.isBlank()) return java.util.Collections.emptySet();
+        String[] parts = permissions.split(",");
+        return java.util.Arrays.stream(parts).map(String::trim).collect(java.util.stream.Collectors.toSet());
+    }
 }

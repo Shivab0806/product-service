@@ -7,14 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -45,18 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 String username = jwtUtil.extractUsername(token);
                 Set<String> roles = jwtUtil.extractRoles(token);
-
-                System.out.println(" Username:{}"+ username);
-
-                System.out.println(" roles:{}"+ roles);
-
-
-                List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
-
-                System.out.println(" authorities:{}"+ authorities);
-
+                java.util.Set<String> perms = jwtUtil.extractAuthorities(token);
+                java.util.List<org.springframework.security.core.GrantedAuthority> authorities = new java.util.ArrayList<>();
+                roles.stream().map(org.springframework.security.core.authority.SimpleGrantedAuthority::new).forEach(authorities::add);
+                perms.stream().map(org.springframework.security.core.authority.SimpleGrantedAuthority::new).forEach(authorities::add);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(

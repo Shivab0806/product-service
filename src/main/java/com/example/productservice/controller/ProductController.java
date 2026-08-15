@@ -33,7 +33,7 @@ public class ProductController {
 
     @Operation(summary = "Create a new product")
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_PRODUCT')")
     public ResponseEntity<ProductResponseDTO> create(
             @Valid @RequestBody ProductRequestDTO request,
             UriComponentsBuilder uriBuilder) {
